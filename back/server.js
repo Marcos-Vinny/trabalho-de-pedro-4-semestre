@@ -74,3 +74,25 @@ app.delete("/transacoes", async (req, res) => {
     res.status(500).json({ erro: "Erro ao deletar transações" });
   }
 });
+
+// EDITAR UMA TRANSACAO (UPDATE)
+app.put("/transacoes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { descricao, valor, tipo } = req.body;
+
+    const atualizada = await Transacao.findByIdAndUpdate(
+      id,
+      { descricao, valor, tipo },
+      { new: true }
+    );
+
+    if (!atualizada) {
+      return res.status(404).json({ erro: "Transação não encontrada" });
+    }
+
+    res.json(atualizada);
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao atualizar transação" });
+  }
+});
